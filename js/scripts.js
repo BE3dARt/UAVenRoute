@@ -165,7 +165,7 @@
 
         var xmlhttp = new XMLHttpRequest();
 
-        xmlhttp.open("GET", "https://yacdn.org/proxy/http://[2a02:aa15:337f:9d00:97b5:b12f:1eb4:a93a]:5000/v1/eu-dem?locations=" + latitude + "," + longitude, true);
+        xmlhttp.open("GET", "[2a02:aa15:337f:9d00:97b5:b12f:1eb4:a93a]:5000/v1/eu-dem?locations=" + latitude + "," + longitude, true);
         xmlhttp.send();
 
         xmlhttp.onreadystatechange = function () {
