@@ -1,0 +1,18 @@
+[26.02.2020 - 8h]
+Geschichte:
+Ich hatte gestern die Idee einen War Thunder Grind Calculator mit GitHub Pages zu erstellen. GitHub Pages ist ein Dienst von GitHub.com wo man seine eigene, statische, Webseite ganz kostelos hosten kann.
+Ich habe selber eine Webseite abseits von GitHub, doch dies braucht stunden Zeit um den Code zu Debuggen. GitHub ist einfach, schnell und von überall zugänglich.
+
+Technik:
+Für die Karten Darstellug werden Kartenfragmente benötigt, sogenannte Tiles. Diese werden entweder auf Servern gehostet, oder lokal auf GitHub geladen. Da ich weiss, dass GitHub nicht so viel Bandbreite zu Verfügung stellt, habe ich mich entschieden nach Tiles zu suchen, die auf anderen server gehostet werden.
+So zieht sich der Client die Karte direkt beim 3. Anbieter runter. In meinem Beispiel beziehe ich sie von ArcGIS, esri. Diese Tiles sind Hochauflösend und mithilfe vieler Institue hergestellt. Um diese Tiles darstellen zu können braucht es dienste wie die Google Maps API oder freie, open-source projekte wie Leaflet JS, welches ich jetzt nutze. Klar, Google hat alles, ist schnell und es liegt dir alles zu füssen. Doch man muss dafür zahlen. :/
+Diese Dienste dienen wie ein overlay über diese Tiles. So kann man Marker, Linien und solches hinzfügen.
+Ein problem blieb dennoch bestehen. Wo holen wir die Höhendaten her? Mir war das gar nicht bewusst, dass es gar nicht so einfach ist, eine Höhe aus einer Karte zu bekommen. Hier Reichen herkömmliche Tiles nicht mehr, hier müssen Formate wie GeoTiff hin. Diese sind meisten nur viele verschiedene Grau-töne. So kann man ein Bild haben, jedoch die Höhendaten anhand der Grau-Werte ablesen.
+Ein weiteres Problem stellten die verschiedenen GPS Systeme dar. Denn jede Nation hat ein anderes System. Gewisse messen vom einen Bezugspunkt, die anderen vom andern. Ich war sicher 4 Stunden damit beschäftigt passende Tiles zu finden. 
+Leaflet kann nählich GeoTiff nicht einfach lesen, also war ich auf plugins angeweisen. Es gibt etwa 6, doch keines passte richtig. Die einen waren pur für Linux geschrieben und zudem noch lokal, wieder andere hatten gar keine Dokumenation. Ich versuchte jeden Ansatz aufs neu, suchte neue Höhenkarten. Für viele muss man auch noch zahlen. Viele waren niocht im richtigen Format, nicht genau genug. 
+
+SRTM beschreiben, wieso so kompliziert, finale Lösung.
+
+Links:
+Leaflet JS: https://leafletjs.com/
+Tiles provider ArcGIS (esri): https://www.esri.com/de-de/arcgis/about-arcgis/overview

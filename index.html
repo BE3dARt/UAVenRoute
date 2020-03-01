@@ -1,0 +1,110 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>BE3dARt</title>
+    <meta name="description" content="The HTML5 Herald">
+    <meta name="author" content="BE3dARt">
+
+    <link rel="stylesheet" href="css/styles.css">
+
+</head>
+
+<body>
+
+    <div id="page-wrapper">
+
+
+        <div class="row">
+            <div class="column">
+                <div>
+                    <img src="img/warThunder_Icon.png" alt="War Thunder Icon" width="100" height="100" onclick="window.location.href='index.html'">
+
+                </div>
+
+                <div>
+
+                    <img src="img/UAV_Icon.png" alt="UAV Icon" width="100" height="100" onclick="window.location.href='projectUAV.html'">
+
+                </div>
+
+            </div>
+
+            <div class="column">
+                <h1 id="hello">War Thunder Grind Calculator</h1>
+                <div>Calculate the remaining grind for your dream vehicle! You will setup your profile and save it locally to access it every day!</div>
+
+                <div id="box">
+
+                    <div>
+                        Silverlions:
+                        <input type="number" id="silverlions">
+                    </div>
+
+                    <div>
+                        Research Points:
+                        <input type="number" id="researchPoints">
+                    </div>
+
+                </div>
+
+                <div id="box">
+                    Premium Account?
+                    <input type="checkbox" id="premium">
+                </div>
+
+                <div id="box">
+                    Import Profile:
+                    <input type="file" id="fileInput">
+                </div>
+                <pre id="fileDisplayArea"></pre>
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <script>
+        var fileInput = document.getElementById('fileInput');
+        var fileDisplayArea = document.getElementById('fileDisplayArea');
+        var hello = document.getElementById('hello');
+
+        hello.addEventListener('click', function() {
+            testus();
+        });
+
+        function testus() {
+            let silverlions = document.getElementById("silverlions").value;
+            let researchPoints = document.getElementById("researchPoints").value;
+            let premium = document.getElementById("premium").value;
+            fileDisplayArea.innerText = silverlions + researchPoints + premium;
+        }
+
+        window.onbeforeunload = function() {
+            return "";
+        };
+
+        window.onload = function() {
+
+            fileInput.addEventListener('change', function(e) {
+
+                var file = fileInput.files[0];
+                var reader = new FileReader();
+
+                reader.onload = function(e) {
+                    fileDisplayArea.innerText = reader.result;
+                }
+                reader.readAsText(file);
+            });
+        }
+
+    </script>
+
+</body>
+
+</html>
