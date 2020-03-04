@@ -1,8 +1,11 @@
     //Attribution
     //Marker: <div>Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
 
+    //Adruino has a read() function which reads every character as described here: https://forum.arduino.cc/index.php?topic=451141.0
 
-    var map = L.map('map', { zoomControl: false }).setView([47.486153, 8.206813], 15);
+    var map = L.map('map', {
+        zoomControl: false
+    }).setView([47.486153, 8.206813], 15);
     var Esri_WorldTopoMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
         attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
     }).addTo(map);
@@ -14,6 +17,54 @@
         popupAnchor: [0, -60],
     });
 
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //Export Array of Markers to a file
+    /*
+    
+    var exportString;
+    
+    var counter = 0;
+    string += "{\n";
+
+    while (markerArray[counter] != null) {
+        string += "{";
+        
+        string += positionArray[0][counter].toString;
+        string += ",";
+        string += positionArray[1][counter].toString;
+        string += ",";
+        string += positionArray[2][counter].toString;
+
+        string += "}\n";
+
+        counter += 1;
+    }
+    
+     string += "}";
+    
+    
+    
+    Must look like this
+    {
+        {1,2,3}
+        {3,5,7}
+    }
+
+    */
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    var exportButton = document.getElementById('exportButton');
+    exportButton.addEventListener('click', function () {
+        exportToFile();
+    });
+
+    function exportToFile() {
+
+        var blob = new Blob(["Hello, world!"], {
+            type: "text/plain;charset=utf-8"
+        });
+        saveAs(blob, "hello world.txt");
+
+    }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Convert Longitude and Latitude into meters
@@ -59,7 +110,7 @@
                 if (counter >= 1) {
                     distance = distance + convertGPStoMeters(positionArray[0][counter - 1], positionArray[1][counter - 1], positionArray[0][counter], positionArray[1][counter]);
                 }
-                
+
                 altitudeAray.push(positionArray[2][counter]);
 
                 tempArray.push([positionArray[0][counter], positionArray[1][counter]]);
@@ -70,7 +121,7 @@
             polyline = L.polyline(tempArray, {
                 color: '#e50027'
             }).addTo(map);
-            
+
             var maxHeight = Math.max(...altitudeAray);
             var minHeight = Math.min(...altitudeAray);
 
