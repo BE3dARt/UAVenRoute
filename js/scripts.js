@@ -1,5 +1,6 @@
     //Attribution
     //Marker: <div>Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+    //Target: Icons made by <a href="https://www.flaticon.com/authors/alfredo-hernandez" title="Alfredo Hernandez">Alfredo Hernandez</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
 
     //Adruino has a read() function which reads every character as described here: https://forum.arduino.cc/index.php?topic=451141.0
 
@@ -12,6 +13,13 @@
 
     var markerIcon = L.icon({
         iconUrl: 'img/pin.png',
+        iconSize: [50, 50],
+        iconAnchor: [25, 50],
+        popupAnchor: [0, -60],
+    });
+
+    var markerIconDrop = L.icon({
+        iconUrl: 'img/pinTarget.png',
         iconSize: [50, 50],
         iconAnchor: [25, 50],
         popupAnchor: [0, -60],
@@ -59,7 +67,29 @@
 
     function exportToFile() {
 
-        var blob = new Blob(["Hello, world!"], {
+        var exportString = "{\n";
+
+        var counter = 0;
+
+        while (markerArray[counter] != null) {
+            exportString += "{";
+
+            exportString += positionArray[0][counter];
+            exportString += ",";
+            exportString += positionArray[1][counter];
+            exportString += ",";
+            exportString += positionArray[2][counter];
+            exportString += ",";
+            exportString += positionArray[3][counter];
+
+            exportString += "}\n";
+
+            counter += 1;
+        }
+
+        exportString += "}";
+
+        var blob = new Blob([exportString], {
             type: "text/plain;charset=utf-8"
         });
         saveAs(blob, "hello world.txt");
@@ -139,7 +169,7 @@
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
     var markerArray = [0];
     var positionArray = [
-        [0], [0], [0]
+        [0], [0], [0], [0]
     ];
 
     //In positionArray[2][1], the first digit represents x,y,z and the second one the marker. So if you want the 3rd marker to be 5m in altitude you would have to write positionArray[2][2] = 5;
@@ -170,6 +200,7 @@
         positionArray[0][counter] = latitude;
         positionArray[1][counter] = longitude;
         positionArray[2][counter] = altitude;
+        positionArray[3][counter] = 0;
 
         markerArray[counter].bindPopup("Marker: " + (counter + 1) + "<br>Altitude: " + altitude).openPopup();
 
@@ -178,6 +209,33 @@
         markerArray[counter].on('dragend', function (e) {
 
             getAltitude(positionArray[0][counter], positionArray[1][counter], true, counter);
+
+        });
+
+        markerArray[counter].on('contextmenu', function (e) {
+
+            var counterWhile = 0;
+
+            if (positionArray[3][counter] == 1) {
+
+                while (markerArray[counterWhile] != null) {
+
+                    positionArray[3][counterWhile] = 0;
+                    markerArray[counterWhile].setIcon(markerIcon);
+                    counterWhile += 1;
+                }
+
+            } else {
+
+                while (markerArray[counterWhile] != null) {
+
+                    positionArray[3][counterWhile] = 0;
+                    markerArray[counterWhile].setIcon(markerIcon);
+                    counterWhile += 1;
+                }
+                positionArray[3][counter] = 1;
+                markerArray[counter].setIcon(markerIconDrop);
+            }
 
         });
 
@@ -202,7 +260,7 @@
 
         positionArray[2][markerNumber] = altitude;
 
-        markerArray[markerNumber].setPopupContent("Marker: " + markerNumber + 1 + "<br>Altitude: " + altitude);
+        markerArray[markerNumber].setPopupContent("Marker: " + (markerNumber + 1) + "<br>Altitude: " + altitude);
 
         drawPolyline();
 
@@ -216,7 +274,11 @@
 
         var xmlhttp = new XMLHttpRequest();
 
-        xmlhttp.open("GET", "http://[2a02:aa15:337f:9d00:97b5:b12f:1eb4:a93a]:5000/v1/eu-dem?locations=" + latitude + "," + longitude, true);
+        //xmlhttp.open("GET", "http://[2a02:aa15:337f:9d00:97b5:b12f:1eb4:a93a]:5000/v1/eu-dem?locations=" + latitude + "," + longitude, true);
+
+        xmlhttp.open("GET", "https://cors-anywhere.herokuapp.com/https://api.opentopodata.org/v1/srtm90m?locations=" + latitude + "," + longitude, true);
+
+
         xmlhttp.send();
 
         xmlhttp.onreadystatechange = function () {
