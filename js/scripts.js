@@ -92,7 +92,7 @@
         var blob = new Blob([exportString], {
             type: "text/plain;charset=utf-8"
         });
-        saveAs(blob, "hello world.txt");
+        saveAs(blob, "FLightData.txt");
 
     }
 
@@ -212,6 +212,19 @@
 
         });
 
+        markerArray[counter].on('popupopen', function (e) {
+
+            var inputBox = document.getElementById('inputBox');
+            inputBox.style.visibility = 'visible';
+        });
+
+        markerArray[counter].on('popupclose', function (e) {
+
+            var inputBox = document.getElementById('inputBox');
+            inputBox.style.visibility = 'hidden';
+
+        });
+
         markerArray[counter].on('contextmenu', function (e) {
 
             var counterWhile = 0;
@@ -269,17 +282,23 @@
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Make a HTTP Request and return elevation
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    var urlArray = ["http://[2a02:aa15:337f:9d00:97b5:b12f:1eb4:a93a]:5000/v1/eu-dem?locations=", "https://cors-anywhere.herokuapp.com/https://api.opentopodata.org/v1/srtm90m?locations="];
 
     function getAltitude(latitude, longitude, option, markerNumber) {
 
         var xmlhttp = new XMLHttpRequest();
 
-        //xmlhttp.open("GET", "http://[2a02:aa15:337f:9d00:97b5:b12f:1eb4:a93a]:5000/v1/eu-dem?locations=" + latitude + "," + longitude, true);
-
-        xmlhttp.open("GET", "https://cors-anywhere.herokuapp.com/https://api.opentopodata.org/v1/srtm90m?locations=" + latitude + "," + longitude, true);
-
-
-        xmlhttp.send();
+        $.ajax({
+            url: (urlArray[0] + "69,420"),
+            success: function (result) {
+                xmlhttp.open("GET", urlArray[0] + latitude + "," + longitude, true);
+                 xmlhttp.send();
+            },
+            error: function (result) {
+                xmlhttp.open("GET", urlArray[1] + latitude + "," + longitude, true);
+                 xmlhttp.send();
+            }
+        });
 
         xmlhttp.onreadystatechange = function () {
 
@@ -310,6 +329,35 @@
         getAltitude(latitude, longitude, false, 9999);
 
     }
+
+    var submitButton = document.getElementById('submitButton');
+    submitButton.addEventListener('click', function () {
+
+        var counter = 0;
+
+        while (markerArray[counter] != null) {
+
+            var popup = markerArray[counter].getPopup();
+
+            if (popup.isOpen()) {
+
+                var xPos = document.getElementById("xPos").value;
+                var yPos = document.getElementById("yPos").value;
+
+                positionArray[0][counter] = xPos;
+                positionArray[1][counter] = yPos;
+
+                markerArray[counter].setLatLng([xPos, yPos]);
+
+                drawPolyline();
+
+                getAltitude(positionArray[0][counter], positionArray[1][counter], true, counter);
+            }
+
+            counter += 1;
+        }
+
+    });
 
     map.on('click', onMapClick);
 
